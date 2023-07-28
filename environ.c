@@ -8,13 +8,13 @@
  */
 int _myenv(info_t *info)
 {
-	char **env = info->env;
+	list_t *env = info->env;
 
-	while (*env)
+	while (env)
 	{
-		_puts(*env);
+		_puts(env->str);
 		_putchar('\n');
-		env++;
+		env = env->next;
 	}
 	return (0);
 }
@@ -29,14 +29,17 @@ int _myenv(info_t *info)
  */
 char *_getenv(info_t *info, const char *name)
 {
-	char **env = info->env;
-	size_t len = _strlen(name);
+	list_t *env = info->env;
+	char *name_copy = _strdup(name);
+	size_t len = _strlen(name_copy);
 
-	while (*env)
+	while (env)
 	{
-		if (_strncmp(*env, name, len) == 0 && (*env)[len] == '=')
-			return (*env + len + 1);
-		env++;
+		char *env_var = env->str;
+
+		if (_strcmp(env_var, name_copy) == 0 && env_var[len] == '=')
+			return (env_var + len + 1);
+		env = env->next;
 	}
 	return (NULL);
 }
@@ -50,16 +53,16 @@ char *_getenv(info_t *info, const char *name)
  */
 int _mysetenv(info_t *info)
 {
+	char *name = info->argv[1];
+	char *value = info->argv[2];
+	int ret = setenv(name, value, 1);
+
 	if (info->argc != 3)
 	{
 		_eputs("Incorrect number of arguments\n");
 		return (1);
 	}
 
-	char *name = info->argv[1];
-	char *value = info->argv[2];
-
-	int ret = setenv(name, value, 1);
 
 	if (ret != 0)
 	{
@@ -78,13 +81,15 @@ int _mysetenv(info_t *info)
  */
 int _myunsetenv(info_t *info)
 {
+	int i = 0;
+
 	if (info->argc == 1)
 	{
 		_eputs("Too few arguments.\n");
 		return (1);
 	}
 
-	for (int i = 1; i < info->argc; i++)
+	for (i = 1; i < info->argc; i++)
 	{
 		char *name = info->argv[i];
 		int ret = unsetenv(name);

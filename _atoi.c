@@ -1,24 +1,24 @@
 #include "shell.h"
 
 /**
- * check_interactive_mode - Checks if the shell is running in interactive mode
+ * interactive - Checks if the shell is running in interactive mode
  * @info: Pointer to the info_t structure
  *
  * Return: 1 if running in interactive mode, 0 otherwise
  */
-int check_interactive_mode(info_t *info)
+int interactive(info_t *info)
 {
 	return (isatty(STDIN_FILENO) && info->readfd <= 2);
 }
 
 /**
- * is_delimiter - Checks if a character is a delimiter
+ * is_delim - Checks if a character is a delimiter
  * @c: The character to check
  * @delim: The delimiter string
  *
  * Return: 1 if the character is a delimiter, 0 otherwise
  */
-int is_delimiter(char c, char *delim)
+int is_delim(char c, char *delim)
 {
 	while (*delim)
 	{
@@ -44,12 +44,12 @@ int is_alphabetic(int c)
 }
 
 /**
- * atoi - Converts a string to an integer
+ * _atoi - Converts a string to an integer
  * @s: The string to be converted
  *
  * Return: The converted number if successful, 0 otherwise
  */
-int atoi(char *s)
+int _atoi(char *s)
 {
 	int i, sign = 1, flag = 0;
 	unsigned int result = 0;
